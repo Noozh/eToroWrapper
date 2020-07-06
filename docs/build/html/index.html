@@ -1,0 +1,536 @@
+
+
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eToro API’s documentation &#8212; Sphinx-Themes template 1 documentation</title>
+    <link rel="stylesheet" href="_static/p_sphinx_theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/local_fonts.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/jquery.cookie.js"></script>
+    <script src="_static/p_sphinx_theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+      <div class="relbar-top">
+            
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+      <li><a href="#">Sphinx-Themes template 1 documentation</a> &#187;</li>
+
+        <li class="nav-item nav-item-this"><a href="">eToro API’s documentation</a></li> 
+      </ul>
+    </div>
+      </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="etoro-api-s-documentation">
+<h1>eToro API’s documentation<a class="headerlink" href="#etoro-api-s-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="etorowrapperserver">
+<h1>eToroWrapperServer<a class="headerlink" href="#etorowrapperserver" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="eToroWrapperServer.eToroWrapperServer">
+<em class="property">class </em><code class="sig-prename descclassname">eToroWrapperServer.</code><code class="sig-name descname">eToroWrapperServer</code><a class="reference internal" href="_modules/eToroWrapperServer.html#eToroWrapperServer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eToroWrapperServer.eToroWrapperServer" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="eToroWrapperServer.eToroWrapperServer.change_mode">
+<code class="sig-name descname">change_mode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eToroWrapperServer.html#eToroWrapperServer.change_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eToroWrapperServer.eToroWrapperServer.change_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method enables changing between “virtual” and “real” mode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mode</strong> (<em>string</em>) – Mode you want to change. It can be “virtual” or “real”</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns a json response which the status of the request and the information requested if succeed</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eToroWrapperServer.eToroWrapperServer.close_position">
+<code class="sig-name descname">close_position</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">active</span></em>, <em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eToroWrapperServer.html#eToroWrapperServer.close_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eToroWrapperServer.eToroWrapperServer.close_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method enables closing an existing position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>active</strong> (<em>string</em>) – Name used for an active in the eToro Web IDE.</p></li>
+<li><p><strong>id</strong> (<em>int</em>) – Current id for the target position.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns a json response which the status of the request and the information requested if succeed</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eToroWrapperServer.eToroWrapperServer.get_active_info">
+<code class="sig-name descname">get_active_info</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em>, <em class="sig-param"><span class="n">active</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eToroWrapperServer.html#eToroWrapperServer.get_active_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eToroWrapperServer.eToroWrapperServer.get_active_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method provides detailed info about and active for a buying or selling action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>action</strong> (<em>string</em>) – The action type. It can be “buy” or “sell”</p></li>
+<li><p><strong>active</strong> (<em>string</em>) – Name used for an active in the eToro Web IDE.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns a json response which the status of the request and the information requested if succeed</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eToroWrapperServer.eToroWrapperServer.get_portfolio">
+<code class="sig-name descname">get_portfolio</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">active</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eToroWrapperServer.html#eToroWrapperServer.get_portfolio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eToroWrapperServer.eToroWrapperServer.get_portfolio" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method provides general or specific info from user’s porfolio such as actives managed or positions opened of each active. This method can be called by requesting to /get_portfolio/&lt;string:active&gt;</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>active</strong> (<em>string</em>) – Its value should be the name of a specific active (btc, ethereum…) or the word general in order to get the general user portfolio.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns a json response which the status of the request and the information requested if succeed</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eToroWrapperServer.eToroWrapperServer.get_wallet_info">
+<code class="sig-name descname">get_wallet_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eToroWrapperServer.html#eToroWrapperServer.get_wallet_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eToroWrapperServer.eToroWrapperServer.get_wallet_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method provides the user wallet info. It can be called by requesting /get_wallet_info</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Returns a json response which the status of the request and the information requested if succeed</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eToroWrapperServer.eToroWrapperServer.init_driver">
+<code class="sig-name descname">init_driver</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eToroWrapperServer.html#eToroWrapperServer.init_driver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eToroWrapperServer.eToroWrapperServer.init_driver" title="Permalink to this definition">¶</a></dt>
+<dd><p>This methods initialize webdriver and logs in eToro GUI. Can be called requesting to / endpoint</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Returns a json response which the status of the request</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eToroWrapperServer.eToroWrapperServer.open_position">
+<code class="sig-name descname">open_position</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em>, <em class="sig-param"><span class="n">active</span></em>, <em class="sig-param"><span class="n">leverage</span></em>, <em class="sig-param"><span class="n">amount</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eToroWrapperServer.html#eToroWrapperServer.open_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eToroWrapperServer.eToroWrapperServer.open_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method enables opening a new position. It can manage some parameters such as action type, active, leverage and amount</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>action</strong> (<em>string</em>) – The action type. It can be “buy” or “sell”</p></li>
+<li><p><strong>active</strong> (<em>string</em>) – Name used for an active in the eToro Web IDE.</p></li>
+<li><p><strong>leverage</strong> (<em>string</em>) – Leverage multiplier. It should be an available value in eToro Web IDE.</p></li>
+<li><p><strong>amount</strong> (<em>string</em>) – Amount of active.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns a json response which the status of the request and the information requested if succeed</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eToroWrapperServer.eToroWrapperServer.setRoutes">
+<code class="sig-name descname">setRoutes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eToroWrapperServer.html#eToroWrapperServer.setRoutes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eToroWrapperServer.eToroWrapperServer.setRoutes" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method maps API endpoints with each functional method</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="etorocrawler">
+<h1>eToroCrawler<a class="headerlink" href="#etorocrawler" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="Crawler.eToroCrawler.eToroCrawler">
+<em class="property">class </em><code class="sig-prename descclassname">Crawler.eToroCrawler.</code><code class="sig-name descname">eToroCrawler</code><a class="reference internal" href="_modules/Crawler/eToroCrawler.html#eToroCrawler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Crawler.eToroCrawler.eToroCrawler" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="Crawler.eToroCrawler.eToroCrawler.change_mode">
+<code class="sig-name descname">change_mode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Crawler/eToroCrawler.html#eToroCrawler.change_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Crawler.eToroCrawler.eToroCrawler.change_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method enables changing between “virtual” and “real” mode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mode</strong> (<em>string</em>) – Mode you want to change. It can be “virtual” or “real”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Crawler.eToroCrawler.eToroCrawler.close_position">
+<code class="sig-name descname">close_position</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">active</span></em>, <em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Crawler/eToroCrawler.html#eToroCrawler.close_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Crawler.eToroCrawler.eToroCrawler.close_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method enables closing an existing position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>active</strong> (<em>string</em>) – Name used for an active in the eToro Web IDE.</p></li>
+<li><p><strong>id</strong> (<em>int</em>) – Current id for the target position.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Crawler.eToroCrawler.eToroCrawler.get_active_info">
+<code class="sig-name descname">get_active_info</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em>, <em class="sig-param"><span class="n">active</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Crawler/eToroCrawler.html#eToroCrawler.get_active_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Crawler.eToroCrawler.eToroCrawler.get_active_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gather some key data about an active</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>action</strong> (<em>string</em>) – The action type. It can be “buy” or “sell”</p></li>
+<li><p><strong>active</strong> (<em>string</em>) – Its value should be the name of a specific active (btc, ethereum…) or the word general in order to get the general user portfolio. If active is “general” general portfolio view is returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Raw dict which contains some specific information about an active</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Crawler.eToroCrawler.eToroCrawler.get_portfolio">
+<code class="sig-name descname">get_portfolio</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">active</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Crawler/eToroCrawler.html#eToroCrawler.get_portfolio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Crawler.eToroCrawler.eToroCrawler.get_portfolio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gather user’s portfolio info</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>active</strong> (<em>string</em>) – Its value should be the name of a specific active (btc, ethereum…) or the word general in order to get the general user portfolio. If active is “general” general portfolio view is returned.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Raw list which contains the requested information</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Crawler.eToroCrawler.eToroCrawler.get_wallet_info">
+<code class="sig-name descname">get_wallet_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Crawler/eToroCrawler.html#eToroCrawler.get_wallet_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Crawler.eToroCrawler.eToroCrawler.get_wallet_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gather user’s wallet info</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Raw element which contains the requested information</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Crawler.eToroCrawler.eToroCrawler.open_position">
+<code class="sig-name descname">open_position</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em>, <em class="sig-param"><span class="n">active</span></em>, <em class="sig-param"><span class="n">leverage</span></em>, <em class="sig-param"><span class="n">amount</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Crawler/eToroCrawler.html#eToroCrawler.open_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Crawler.eToroCrawler.eToroCrawler.open_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method enables opening a new position</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>action</strong> (<em>string</em>) – The action type. It can be “buy” or “sell”</p></li>
+<li><p><strong>active</strong> (<em>string</em>) – Name used for an active in the eToro Web IDE.</p></li>
+<li><p><strong>leverage</strong> (<em>string</em>) – Levarage rate</p></li>
+<li><p><strong>amount</strong> (<em>string</em>) – Active amount</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Crawler.eToroCrawler.eToroCrawler.set_position_window">
+<code class="sig-name descname">set_position_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em>, <em class="sig-param"><span class="n">leverage</span></em>, <em class="sig-param"><span class="n">amount</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Crawler/eToroCrawler.html#eToroCrawler.set_position_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Crawler.eToroCrawler.eToroCrawler.set_position_window" title="Permalink to this definition">¶</a></dt>
+<dd><p>Auxiliary method which refill form fields automatically</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>action</strong> (<em>string</em>) – The action type. It can be “buy” or “sell”</p></li>
+<li><p><strong>leverage</strong> (<em>string</em>) – Levarage rate</p></li>
+<li><p><strong>amount</strong> (<em>string</em>) – Active amount</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="#Exceptions.LeverageNotAvailable.LeverageNotAvailable" title="Exceptions.LeverageNotAvailable.LeverageNotAvailable"><strong>LeverageNotAvailable</strong></a> – This exception is raised when an unavailable leverage rate is provided</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Crawler.eToroCrawler.eToroCrawler.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Crawler/eToroCrawler.html#eToroCrawler.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Crawler.eToroCrawler.eToroCrawler.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logs in the eToro Web IDE</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="parser">
+<h1>Parser<a class="headerlink" href="#parser" title="Permalink to this headline">¶</a></h1>
+<dl class="field-list simple">
+<dt class="field-odd">caption</dt>
+<dd class="field-odd"><p>Auxiliary useful functions to clean up raw data from eToro Web IDE</p>
+</dd>
+</dl>
+<span class="target" id="module-Parser.Parser"></span><dl class="py function">
+<dt id="Parser.Parser.active_portfolio_format">
+<code class="sig-prename descclassname">Parser.Parser.</code><code class="sig-name descname">active_portfolio_format</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">portfolio</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Parser/Parser.html#active_portfolio_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Parser.Parser.active_portfolio_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Order provided active portfolio info and put them in a dict format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>portfolio</strong> (<em>string</em>) – Raw data of user’s portfolio gathered from Web IDE</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Well formatted dict</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Parser.Parser.parse_active_portfolio">
+<code class="sig-prename descclassname">Parser.Parser.</code><code class="sig-name descname">parse_active_portfolio</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">portfolio</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Parser/Parser.html#parse_active_portfolio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Parser.Parser.parse_active_portfolio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean and format provided active portfolio info and put them in a dict format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>portfolio</strong> (<em>string</em>) – Raw data of user’s portfolio gathered from Web IDE</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Well formatted dict</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Parser.Parser.parse_portfolio">
+<code class="sig-prename descclassname">Parser.Parser.</code><code class="sig-name descname">parse_portfolio</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">portfolio</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Parser/Parser.html#parse_portfolio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Parser.Parser.parse_portfolio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean and format provided portfolio info and put them in a dict format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>portfolio</strong> (<em>string</em>) – Raw data of user’s portfolio gathered from Web IDE</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Well formatted dict</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Parser.Parser.parse_wallet">
+<code class="sig-prename descclassname">Parser.Parser.</code><code class="sig-name descname">parse_wallet</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wallet</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Parser/Parser.html#parse_wallet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Parser.Parser.parse_wallet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gather some key data about an active</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>wallet</strong> (<em>string</em>) – Raw data of user’s wallet gathered from Web IDE</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Well formatted dict</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Parser.Parser.str_clean">
+<code class="sig-prename descclassname">Parser.Parser.</code><code class="sig-name descname">str_clean</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">str</span></em>, <em class="sig-param"><span class="n">charlist</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Parser/Parser.html#str_clean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Parser.Parser.str_clean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete from a provided string a specific list of characters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>str</strong> (<em>string</em>) – String to clean</p></li>
+<li><p><strong>charlist</strong> – List of target characters</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Well formatted string</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="responses">
+<h1>Responses<a class="headerlink" href="#responses" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="Responses.BasicResponse.BasicResponse">
+<em class="property">class </em><code class="sig-prename descclassname">Responses.BasicResponse.</code><code class="sig-name descname">BasicResponse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">status</span></em>, <em class="sig-param"><span class="n">description</span></em>, <em class="sig-param"><span class="n">response</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Responses/BasicResponse.html#BasicResponse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Responses.BasicResponse.BasicResponse" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="Responses.BasicResponse.BasicResponse.json_response">
+<code class="sig-name descname">json_response</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Responses/BasicResponse.html#BasicResponse.json_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Responses.BasicResponse.BasicResponse.json_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Formats properly a response to convert it into a json</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return response</dt>
+<dd class="field-odd"><p>Its a json which contains the parameters provide in the constructor</p>
+</dd>
+<dt class="field-even">Rtype response</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="Responses.ErrorResponse.ErrorResponse">
+<em class="property">class </em><code class="sig-prename descclassname">Responses.ErrorResponse.</code><code class="sig-name descname">ErrorResponse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">status</span></em>, <em class="sig-param"><span class="n">description</span></em>, <em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Responses/ErrorResponse.html#ErrorResponse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Responses.ErrorResponse.ErrorResponse" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="Responses.ErrorResponse.ErrorResponse.json_error_response">
+<code class="sig-name descname">json_error_response</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Responses/ErrorResponse.html#ErrorResponse.json_error_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Responses.ErrorResponse.ErrorResponse.json_error_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Formats properly a response to convert it into a json</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return response</dt>
+<dd class="field-odd"><p>Its a json which contains the parameters provide in the constructor</p>
+</dd>
+<dt class="field-even">Rtype response</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="exceptions">
+<h1>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="Exceptions.LeverageNotAvailable.LeverageNotAvailable">
+<em class="property">class </em><code class="sig-prename descclassname">Exceptions.LeverageNotAvailable.</code><code class="sig-name descname">LeverageNotAvailable</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Exceptions/LeverageNotAvailable.html#LeverageNotAvailable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Exceptions.LeverageNotAvailable.LeverageNotAvailable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="sphinxlocaltoc">
+    <h3><a href="#">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">eToro API’s documentation</a></li>
+<li><a class="reference internal" href="#etorowrapperserver">eToroWrapperServer</a></li>
+<li><a class="reference internal" href="#etorocrawler">eToroCrawler</a></li>
+<li><a class="reference internal" href="#parser">Parser</a></li>
+<li><a class="reference internal" href="#responses">Responses</a></li>
+<li><a class="reference internal" href="#exceptions">Exceptions</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  </div>
+
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+      <div class="relbar-bottom">
+            
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+      <li><a href="#">Sphinx-Themes template 1 documentation</a> &#187;</li>
+
+        <li class="nav-item nav-item-this"><a href="">eToro API’s documentation</a></li> 
+      </ul>
+    </div>
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, sphinx-themes.org.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.1.
+    </div>
+      <!-- PSphinxTheme -->
+  </body>
+</html>

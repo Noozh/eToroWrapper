@@ -1,0 +1,271 @@
+
+
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eToroWrapperServer &#8212; Sphinx-Themes template 1 documentation</title>
+    <link rel="stylesheet" href="../_static/p_sphinx_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/local_fonts.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/jquery.cookie.js"></script>
+    <script src="../_static/p_sphinx_theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+      <div class="relbar-top">
+            
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+      <li><a href="../index.html">Sphinx-Themes template 1 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">eToroWrapperServer</a></li> 
+      </ul>
+    </div>
+      </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for eToroWrapperServer</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="kn">from</span> <span class="nn">Crawler.eToroCrawler</span> <span class="kn">import</span> <span class="n">eToroCrawler</span>
+<span class="kn">from</span> <span class="nn">Responses.BasicResponse</span> <span class="kn">import</span> <span class="n">BasicResponse</span>
+<span class="kn">from</span> <span class="nn">Responses.ErrorResponse</span> <span class="kn">import</span> <span class="n">ErrorResponse</span>
+<span class="kn">from</span> <span class="nn">Exceptions.LeverageNotAvailable</span> <span class="kn">import</span> <span class="n">LeverageNotAvailable</span>
+<span class="kn">import</span> <span class="nn">selenium.common.exceptions</span> <span class="k">as</span> <span class="nn">ES</span>
+<span class="kn">import</span> <span class="nn">Responses.Messages</span> <span class="k">as</span> <span class="nn">M</span>
+<span class="kn">import</span> <span class="nn">Parser.Parser</span> <span class="k">as</span> <span class="nn">P</span>
+
+<div class="viewcode-block" id="eToroWrapperServer"><a class="viewcode-back" href="../index.html#eToroWrapperServer.eToroWrapperServer">[docs]</a><span class="k">class</span> <span class="nc">eToroWrapperServer</span><span class="p">():</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor for the class eToroWrapperServer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setRoutes</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+<div class="viewcode-block" id="eToroWrapperServer.setRoutes"><a class="viewcode-back" href="../index.html#eToroWrapperServer.eToroWrapperServer.setRoutes">[docs]</a>    <span class="k">def</span> <span class="nf">setRoutes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method maps API endpoints with each functional method</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">add_url_rule</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;init_driver&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_driver</span><span class="p">)</span> <span class="c1"># Inicia el browser y realiza el login en eToro</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">add_url_rule</span><span class="p">(</span><span class="s1">&#39;/get_wallet_info&#39;</span><span class="p">,</span> <span class="s1">&#39;get_wallet_info&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_wallet_info</span><span class="p">)</span> <span class="c1"># Obtiene los datos relativos a la cartera ofrecidos por eToro</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">add_url_rule</span><span class="p">(</span><span class="s1">&#39;/get_portfolio/&lt;string:active&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;get_portfolio&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_portfolio</span><span class="p">)</span> <span class="c1"># Obtiene los datos de las posiciones activas de un determinado activo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">add_url_rule</span><span class="p">(</span><span class="s1">&#39;/get_active_info/&lt;string:action&gt;/&lt;string:active&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;get_active_info&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_active_info</span><span class="p">)</span> <span class="c1"># Obtiene los datos de las posiciones activas de un determinado activo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">add_url_rule</span><span class="p">(</span><span class="s1">&#39;/change_mode/&lt;string:mode&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;change_mode&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">change_mode</span><span class="p">)</span> <span class="c1"># Permite conmutar entre modo real y virtual</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">add_url_rule</span><span class="p">(</span><span class="s1">&#39;/open_position/&lt;string:action&gt;/&lt;string:active&gt;/&lt;string:leverage&gt;/&lt;string:amount&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;open_position&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">open_position</span><span class="p">)</span> <span class="c1"># Permite abrir una posicion de un activo determinado</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">add_url_rule</span><span class="p">(</span><span class="s1">&#39;/close_position/&lt;string:active&gt;/&lt;int:id&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;close_position&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">close_position</span><span class="p">)</span> <span class="c1"># Permite cerrar una posicion de un activo determinado</span></div>
+
+<div class="viewcode-block" id="eToroWrapperServer.init_driver"><a class="viewcode-back" href="../index.html#eToroWrapperServer.eToroWrapperServer.init_driver">[docs]</a>    <span class="k">def</span> <span class="nf">init_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This methods initialize webdriver and logs in eToro GUI. Can be called requesting to / endpoint</span>
+
+<span class="sd">        :return: Returns a json response which the status of the request</span>
+<span class="sd">        :rtype: Response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">driver</span> <span class="o">=</span> <span class="n">eToroCrawler</span><span class="p">()</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">BasicResponse</span><span class="p">(</span><span class="s2">&quot;OK&quot;</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">DRIVER_INIT_DESCRIPTION</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">DRIVER_INIT_OK</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json_response</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">ErrorResponse</span><span class="p">(</span><span class="s2">&quot;KO&quot;</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">DRIVER_INIT_DESCRIPTION</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">DRIVER_INIT_KO</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">)</span>
+            <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json_error_response</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="eToroWrapperServer.get_wallet_info"><a class="viewcode-back" href="../index.html#eToroWrapperServer.eToroWrapperServer.get_wallet_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_wallet_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method provides the user wallet info. It can be called by requesting /get_wallet_info</span>
+
+<span class="sd">        :return: Returns a json response which the status of the request and the information requested if succeed</span>
+<span class="sd">        :rtype: Response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">wallet</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">parse_wallet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">get_wallet_info</span><span class="p">())</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">BasicResponse</span><span class="p">(</span><span class="s2">&quot;OK&quot;</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">WALLET_DESCRIPTION</span><span class="p">,</span> <span class="n">wallet</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json_response</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">ES</span><span class="o">.</span><span class="n">TimeoutException</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">ErrorResponse</span><span class="p">(</span><span class="s2">&quot;KO&quot;</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">WALLET_DESCRIPTION</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">WALLET_KO</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json_error_response</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="eToroWrapperServer.get_portfolio"><a class="viewcode-back" href="../index.html#eToroWrapperServer.eToroWrapperServer.get_portfolio">[docs]</a>    <span class="k">def</span> <span class="nf">get_portfolio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">active</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method provides general or specific info from user&#39;s porfolio such as actives managed or positions opened of each active. This method can be called by requesting to /get_portfolio/&lt;string:active&gt;</span>
+
+<span class="sd">        :param active: Its value should be the name of a specific active (btc, ethereum...) or the word general in order to get the general user portfolio.</span>
+<span class="sd">        :type active: string</span>
+
+<span class="sd">        :return: Returns a json response which the status of the request and the information requested if succeed</span>
+<span class="sd">        :rtype: Response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">active</span> <span class="o">==</span> <span class="s2">&quot;general&quot;</span><span class="p">:</span>
+                <span class="n">portfolio</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">parse_portfolio</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">get_portfolio</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">portfolio</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">parse_active_portfolio</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">get_portfolio</span><span class="p">(</span><span class="n">active</span><span class="p">))</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">BasicResponse</span><span class="p">(</span><span class="s2">&quot;OK&quot;</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">PORTFOLIO_DESCRIPTION</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json_response</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">ES</span><span class="o">.</span><span class="n">TimeoutException</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">ErrorResponse</span><span class="p">(</span><span class="s2">&quot;KO&quot;</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">PORTFOLIO_DESCRIPTION</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">PORTFOLIO_KO</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json_error_response</span><span class="p">()</span></div>
+
+    <span class="c1"># Agregar excepciones</span>
+<div class="viewcode-block" id="eToroWrapperServer.get_active_info"><a class="viewcode-back" href="../index.html#eToroWrapperServer.eToroWrapperServer.get_active_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_active_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">active</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method provides detailed info about and active for a buying or selling action</span>
+
+<span class="sd">        :param action: The action type. It can be &quot;buy&quot; or &quot;sell&quot;</span>
+<span class="sd">        :type action: string</span>
+<span class="sd">        :param active: Name used for an active in the eToro Web IDE.</span>
+<span class="sd">        :type active: string</span>
+
+<span class="sd">        :return: Returns a json response which the status of the request and the information requested if succeed</span>
+<span class="sd">        :rtype: Response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">get_active_info</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">active</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">BasicResponse</span><span class="p">(</span><span class="s2">&quot;OK&quot;</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">PORTFOLIO_DESCRIPTION</span><span class="p">,</span> <span class="n">info</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json_response</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="eToroWrapperServer.change_mode"><a class="viewcode-back" href="../index.html#eToroWrapperServer.eToroWrapperServer.change_mode">[docs]</a>    <span class="k">def</span> <span class="nf">change_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method enables changing between &quot;virtual&quot; and &quot;real&quot; mode</span>
+
+<span class="sd">        :param mode: Mode you want to change. It can be &quot;virtual&quot; or &quot;real&quot;</span>
+<span class="sd">        :type mode: string</span>
+
+<span class="sd">        :return: Returns a json response which the status of the request and the information requested if succeed</span>
+<span class="sd">        :rtype: Response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;real&quot;</span> <span class="ow">or</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;virtual&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">change_mode</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">BasicResponse</span><span class="p">(</span><span class="s2">&quot;OK&quot;</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">CHANGE_MODE_DESCRIPTION</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">CHANGE_MODE_OK</span> <span class="o">+</span> <span class="n">mode</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json_response</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">ErrorResponse</span><span class="p">(</span><span class="s2">&quot;KO&quot;</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">CHANGE_MODE_DESCRIPTION</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">CHANGE_MODE_KO</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">CHANGE_MODE_INVALID_PARAM</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json_error_response</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">ES</span><span class="o">.</span><span class="n">TimeoutException</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">ErrorResponse</span><span class="p">(</span><span class="s2">&quot;KO&quot;</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">CHANGE_MODE_DESCRIPTION</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">CHANGE_MODE_KO</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json_error_response</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="eToroWrapperServer.open_position"><a class="viewcode-back" href="../index.html#eToroWrapperServer.eToroWrapperServer.open_position">[docs]</a>    <span class="k">def</span> <span class="nf">open_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">leverage</span><span class="p">,</span> <span class="n">amount</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method enables opening a new position. It can manage some parameters such as action type, active, leverage and amount</span>
+
+<span class="sd">        :param action: The action type. It can be &quot;buy&quot; or &quot;sell&quot;</span>
+<span class="sd">        :type action: string</span>
+<span class="sd">        :param active: Name used for an active in the eToro Web IDE.</span>
+<span class="sd">        :type active: string</span>
+<span class="sd">        :param leverage: Leverage multiplier. It should be an available value in eToro Web IDE.</span>
+<span class="sd">        :type leverage: string</span>
+<span class="sd">        :param amount: Amount of active.</span>
+<span class="sd">        :type amount: string</span>
+
+<span class="sd">        :return: Returns a json response which the status of the request and the information requested if succeed</span>
+<span class="sd">        :rtype: Response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">open_position</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">leverage</span><span class="p">,</span> <span class="n">amount</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">BasicResponse</span><span class="p">(</span><span class="s2">&quot;OK&quot;</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">OPEN_POSITION_DESCRIPTION</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">OPEN_POSITION_OK</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json_response</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">LeverageNotAvailable</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">ErrorResponse</span><span class="p">(</span><span class="s2">&quot;KO&quot;</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">OPEN_POSITION_DESCRIPTION</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">OPEN_POSITION_KO</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json_error_response</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">ErrorResponse</span><span class="p">(</span><span class="s2">&quot;KO&quot;</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">OPEN_POSITION_DESCRIPTION</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">OPEN_POSITION_KO</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json_error_response</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="eToroWrapperServer.close_position"><a class="viewcode-back" href="../index.html#eToroWrapperServer.eToroWrapperServer.close_position">[docs]</a>    <span class="k">def</span> <span class="nf">close_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method enables closing an existing position.</span>
+
+<span class="sd">        :param active: Name used for an active in the eToro Web IDE.</span>
+<span class="sd">        :type active: string</span>
+<span class="sd">        :param id: Current id for the target position.</span>
+<span class="sd">        :type id: int</span>
+
+<span class="sd">        :return: Returns a json response which the status of the request and the information requested if succeed</span>
+<span class="sd">        :rtype: Response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">close_position</span><span class="p">(</span><span class="n">active</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">BasicResponse</span><span class="p">(</span><span class="s2">&quot;OK&quot;</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">CLOSE_POSITION_DESCRIPTION</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">CLOSE_POSITION_OK</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json_response</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">ErrorResponse</span><span class="p">(</span><span class="s2">&quot;KO&quot;</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">CLOSE_POSITION_DESCRIPTION</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">CLOSE_POSITION_KO</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json_error_response</span><span class="p">()</span></div></div>
+
+<span class="n">server</span> <span class="o">=</span> <span class="n">eToroWrapperServer</span><span class="p">()</span>
+<span class="n">server</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">)</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+      <div class="relbar-bottom">
+            
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+      <li><a href="../index.html">Sphinx-Themes template 1 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">eToroWrapperServer</a></li> 
+      </ul>
+    </div>
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, sphinx-themes.org.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.1.
+    </div>
+      <!-- PSphinxTheme -->
+  </body>
+</html>
