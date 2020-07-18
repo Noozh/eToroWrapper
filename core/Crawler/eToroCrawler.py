@@ -7,6 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from Exceptions.LeverageNotAvailable import LeverageNotAvailable
 import chromedriver_binary
 import time
+import logging
 
 class eToroCrawler():
 
@@ -44,7 +45,7 @@ class eToroCrawler():
             })
             '''
         self.driver = webdriver.Chrome(options=chrome_options)
-        self.driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": script})        
+        self.driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": script})
         self.mode = "real"
         self.setup()
 

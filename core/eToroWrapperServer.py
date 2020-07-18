@@ -6,9 +6,9 @@ from Exceptions.LeverageNotAvailable import LeverageNotAvailable
 import selenium.common.exceptions as ES
 import Responses.Messages as M
 import Parser.Parser as P
+import Logger.Logger as L
 import os, psutil, subprocess
 import requests
-
 
 class eToroWrapperServer():
 
@@ -17,12 +17,16 @@ class eToroWrapperServer():
         Constructor for the class eToroWrapperServer
         """
         self.app = Flask(__name__)
+        self.logger = L.create_log("logfile.log")
+        self.logger.info("Logfile was created")
         self.setRoutes()
         self.driver = eToroCrawler()
+        self.logger.info("Crawler has been initialized succesfully")
         self.api_pid = os.getpid()
         #self.webdriver_pid = self.driver.driver.service.process.pid
         #print("API pid: " + str(self.api_pid) + " webdriver pid: " + str(self.webdriver_pid))
         #subprocess.Popen(['python3', 'ServerWatcher.py' ,str(self.api_pid), str(self.webdriver_pid)])
+        self.logger.info("Server is online")
         self.app.run(debug=True, host='0.0.0.0', use_reloader=False)
         # command = 'python3 ServerWatcher.py ' + str(os.getpid())
         # print(command)
@@ -47,6 +51,7 @@ class eToroWrapperServer():
         """
         This method enables user to know wheter this API is running or not
         """
+        self.logger.info("Endpoint /api_status was called")
         response = BasicResponse("OK", M.API_STATUS_DESCRIPTION, M.API_STATUS_OK)
         return response.json_response()
 
@@ -60,16 +65,19 @@ class eToroWrapperServer():
         :return: Returns a json response which the status of the request and the information requested if succeed
         :rtype: Response
         """
-
+        self.logger.info("Endpoint /change_mode/" + mode + "was called")
         try:
             if mode == "real" or mode == "virtual":
                 self.driver.change_mode(mode)
+                self.logger.info("Mode changed succesfully")
                 response = BasicResponse("OK", M.CHANGE_MODE_DESCRIPTION, M.CHANGE_MODE_OK + mode)
                 return response.json_response()
             else:
+                self.logger.warn("Unavailable mode was provided")
                 response = ErrorResponse("KO", M.CHANGE_MODE_DESCRIPTION, M.CHANGE_MODE_KO, M.CHANGE_MODE_INVALID_PARAM)
                 return response.json_error_response()
         except ES.TimeoutException as err:
+            self.logger.warning("Operation couldn't be done: " + str(err))
             response = ErrorResponse("KO", M.CHANGE_MODE_DESCRIPTION, M.CHANGE_MODE_KO, str(err))
             return response.json_error_response()
 
@@ -86,6 +94,7 @@ class eToroWrapperServer():
         :return: Returns a json response which the status of the request and the information requested if succeed
         :rtype: Response
         """
+        self.logger.info("Endpoint /get_active_info/" + action + "/" + active + "was called")
         info = self.driver.get_active_info(action, active)
         response = BasicResponse("OK", M.PORTFOLIO_DESCRIPTION, info)
         return response.json_response()
@@ -97,11 +106,14 @@ class eToroWrapperServer():
         :return: Returns a json response which the status of the request and the information requested if succeed
         :rtype: Response
         """
+        self.logger.info("Endpoint /get_wallet_info was called")
         try:
             wallet = P.parse_wallet(self.driver.get_wallet_info())
+            self.logger.info("Wallet info was gathered succesfully")
             response = BasicResponse("OK", M.WALLET_DESCRIPTION, wallet)
             return response.json_response()
-        except ES.TimeoutException:
+        except ES.TimeoutException as err:
+            self.logger.warning("Wallet info couldn't be gathered: " + str(err))
             response = ErrorResponse("KO", M.WALLET_DESCRIPTION, M.WALLET_KO, str(err))
             return response.json_error_response()
 
@@ -115,14 +127,19 @@ class eToroWrapperServer():
         :return: Returns a json response which the status of the request and the information requested if succeed
         :rtype: Response
         """
+        self.logger.info("Endpoint /get_portfolio/" + active + " was called")
         try:
+
             if active == None:
                 portfolio = P.parse_portfolio(self.driver.get_portfolio(""))
+                self.logger.info("Portfolio general data was gathered")
             else:
                 portfolio = P.parse_active_portfolio(self.driver.get_portfolio(active))
+                self.logger.info("Portfolio for " + active + " data was gathered")
             response = BasicResponse("OK", M.PORTFOLIO_DESCRIPTION, portfolio)
             return response.json_response()
         except ES.TimeoutException as err:
+            self.logger.warning("Portfolio info couldn't be gathered: " + str(err))
             response = ErrorResponse("KO", M.PORTFOLIO_DESCRIPTION, M.PORTFOLIO_KO, str(err))
             return response.json_error_response()
 
@@ -142,14 +159,18 @@ class eToroWrapperServer():
         :return: Returns a json response which the status of the request and the information requested if succeed
         :rtype: Response
         """
+        self.logger.info("Endpoint /open_position/" + action + "/" + active + "/" + leverage + "/" + amount + " was called")
         try:
             self.driver.open_position(action, active, leverage, amount)
+            self.logger.info("Position was opened succesfully")
             response = BasicResponse("OK", M.OPEN_POSITION_DESCRIPTION, M.OPEN_POSITION_OK)
             return response.json_response()
         except LeverageNotAvailable as err:
+            self.logger.warn("Provided leverage is not allowed for this active")
             response = ErrorResponse("KO", M.OPEN_POSITION_DESCRIPTION, M.OPEN_POSITION_KO, str(err))
             return response.json_error_response()
         except Exception as err:
+            self.logger.warning("Position couldn't be opened: " + str(err))
             response = ErrorResponse("KO", M.OPEN_POSITION_DESCRIPTION, M.OPEN_POSITION_KO, str(err))
             return response.json_error_response()
 
@@ -165,11 +186,14 @@ class eToroWrapperServer():
         :return: Returns a json response which the status of the request and the information requested if succeed
         :rtype: Response
         """
+        self.logger.info("Endpoint /close_position/" + active + "/" + id)
         try:
             self.driver.close_position(active, id)
+            self.logger.info("Position was closed succesfully")
             response = BasicResponse("OK", M.CLOSE_POSITION_DESCRIPTION, M.CLOSE_POSITION_OK)
             return response.json_response()
         except Exception as err:
+            self.logger.warning("Position couldn't be closed: " + str(err))
             response = ErrorResponse("KO", M.CLOSE_POSITION_DESCRIPTION, M.CLOSE_POSITION_KO, str(err))
             return response.json_error_response()
 
@@ -183,14 +207,18 @@ class eToroWrapperServer():
         :return: Returns a json response which the status of the request and the information requested if succeed
         :rtype: Response
         """
+        self.logger.info("Endpoint /close_all/" + active )
         try:
             if active == None:
                 self.driver.close_all()
+                self.logger.info("Positions were closed succesfully")
             else:
                 self.driver.close_all_active(active)
+                self.logger.info("Positions were closed succesfully")
             response = BasicResponse("OK", M.CLOSE_POSITION_DESCRIPTION, M.CLOSE_POSITION_OK)
             return response.json_response()
         except Exception as err:
+            self.logger.warning("Position couldn't be closed: " + str(err))
             response = ErrorResponse("KO", M.CLOSE_POSITION_DESCRIPTION, M.CLOSE_POSITION_KO, str(err))
             return response.json_error_response()
 
