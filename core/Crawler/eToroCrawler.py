@@ -14,24 +14,37 @@ class eToroCrawler():
         """
         Constructor for the class eToroWrapperServer. It opens a browser tab and calls setup() method to log in the eToro Web IDE
         """
+        #driver_path ='/app/chromedriver'
+        driver_path ='/usr/bin/chromedriver'
+
         chrome_options = webdriver.ChromeOptions();
-        chrome_options.add_experimental_option("excludeSwitches", ['enable-automation'])
-        chrome_options.add_experimental_option('useAutomationExtension', False)
-        chrome_options.add_argument("disable-infobars")
-        chrome_options.add_argument('--profile-directory=Default')
-        chrome_options.add_argument("--incognito")
-        chrome_options.add_argument('--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36')
-        chrome_options.add_argument('--disable-extensions')
-        chrome_options.add_argument("--disable-plugins-discovery");
-        chrome_options.add_argument("--start-maximized")
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--no-sandbox")
+
+
+        chrome_options.add_argument("window-size=1400,1500")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("start-maximized")
+        chrome_options.add_argument("enable-automation")
+        chrome_options.add_argument("--disable-infobars")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+
+        #chrome_options.add_experimental_option("excludeSwitches", ['enable-automation'])
+        #chrome_options.add_experimental_option('useAutomationExtension', False)
+        #chrome_options.add_argument("disable-infobars")
+        #chrome_options.add_argument('--profile-directory=Default')
+        #chrome_options.add_argument("--incognito")
+        #chrome_options.add_argument('--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36')
+        #chrome_options.add_argument('--disable-extensions')
+        #chrome_options.add_argument("--disable-plugins-discovery");
+        #chrome_options.add_argument("--start-maximized")
         script = '''
             Object.defineProperty(navigator, 'webdriver', {
                 get: () => undefined
             })
             '''
         self.driver = webdriver.Chrome(options=chrome_options)
-        self.driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": script})
-        self.pid = self.driver.service.process.pid
+        self.driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": script})        
         self.mode = "real"
         self.setup()
 

@@ -7,6 +7,7 @@ import selenium.common.exceptions as ES
 import Responses.Messages as M
 import Parser.Parser as P
 import os, psutil, subprocess
+import requests
 
 
 class eToroWrapperServer():
@@ -17,10 +18,12 @@ class eToroWrapperServer():
         """
         self.app = Flask(__name__)
         self.setRoutes()
-        self.driver = ''
-        # print(os.getpid())
-        # subprocess.Popen(['python3', 'ServerWatcher.py' ,str(os.getpid())])
-        self.app.run(debug=True, host='0.0.0.0')
+        self.driver = eToroCrawler()
+        self.api_pid = os.getpid()
+        #self.webdriver_pid = self.driver.driver.service.process.pid
+        #print("API pid: " + str(self.api_pid) + " webdriver pid: " + str(self.webdriver_pid))
+        #subprocess.Popen(['python3', 'ServerWatcher.py' ,str(self.api_pid), str(self.webdriver_pid)])
+        self.app.run(debug=True, host='0.0.0.0', use_reloader=False)
         # command = 'python3 ServerWatcher.py ' + str(os.getpid())
         # print(command)
         # os.system(command)
@@ -29,7 +32,6 @@ class eToroWrapperServer():
         """
         This method maps API endpoints with each functional method
         """
-        self.app.add_url_rule('/', 'init_driver', self.init_driver) # Inicia el browser y realiza el login en eToro
         self.app.add_url_rule('/get_wallet_info', 'get_wallet_info', self.get_wallet_info) # Obtiene los datos relativos a la cartera ofrecidos por eToro
         self.app.add_url_rule('/get_portfolio/', 'get_portfolio', self.get_portfolio, defaults={"active":None}) # Obtiene los datos de las posiciones activas de un determinado activo
         self.app.add_url_rule('/get_portfolio/<string:active>', 'get_portfolio', self.get_portfolio) # Obtiene los datos de las posiciones activas de un determinado activo
@@ -39,22 +41,7 @@ class eToroWrapperServer():
         self.app.add_url_rule('/close_position/<string:active>/<int:id>', 'close_position', self.close_position) # Permite cerrar una posicion de un activo determinado
         self.app.add_url_rule('/close_all/', 'close_all', self.close_all, defaults={"active":None}) # Permite cerrar todas las posiciones de un activo determinado
         self.app.add_url_rule('/close_all/<string:active>', 'close_all', self.close_all) # Permite cerrar todas las posiciones de un activo determinado
-
-    def init_driver(self):
-        """
-        This methods initialize webdriver and logs in eToro GUI. Can be called requesting to / endpoint
-
-        :return: Returns a json response which the status of the request
-        :rtype: Response
-        """
-        try:
-            self.driver = eToroCrawler()
-            # command = 'python3 Watcher.py ' + str(os.getpid()) + ' ' + str(self.driver.pid)
-            response = BasicResponse("OK", M.DRIVER_INIT_DESCRIPTION, M.DRIVER_INIT_OK)
-            return response.json_response()
-        except Exception as err:
-            response = ErrorResponse("KO", M.DRIVER_INIT_DESCRIPTION, M.DRIVER_INIT_KO, str(err) )
-            return response.json_error_response()
+        self.app.add_url_rule('/api_status','api_status', self.api_status) # Permite conocer el estado de la API
 
     def get_wallet_info(self):
         """
@@ -128,7 +115,7 @@ class eToroWrapperServer():
             else:
                 response = ErrorResponse("KO", M.CHANGE_MODE_DESCRIPTION, M.CHANGE_MODE_KO, M.CHANGE_MODE_INVALID_PARAM)
                 return response.json_error_response()
-        except ES.TimeoutException:
+        except ES.TimeoutException as err:
             response = ErrorResponse("KO", M.CHANGE_MODE_DESCRIPTION, M.CHANGE_MODE_KO, str(err))
             return response.json_error_response()
 
@@ -200,9 +187,15 @@ class eToroWrapperServer():
             response = ErrorResponse("KO", M.CLOSE_POSITION_DESCRIPTION, M.CLOSE_POSITION_KO, str(err))
             return response.json_error_response()
 
+    def api_status(self):
+        """
+        This method enables user to know wheter this API is running or not
+        """
+
+        return "online"
+
 
 server = eToroWrapperServer()
-# command = 'python3 ServerWatcher.py ' + str(os.getpid())
 # print(command)
 # os.system(command)
 # server.app.run(debug=True, host='0.0.0.0')

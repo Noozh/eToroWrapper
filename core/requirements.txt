@@ -1,0 +1,5 @@
+chromedriver_binary
+Flask==1.1.2
+psutil==5.7.0
+selenium
+Sphinx==3.1.1
