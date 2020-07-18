@@ -32,16 +32,63 @@ class eToroWrapperServer():
         """
         This method maps API endpoints with each functional method
         """
+        self.app.add_url_rule('/api_status','api_status', self.api_status) # Permite conocer el estado de la API
+        self.app.add_url_rule('/change_mode/<string:mode>', 'change_mode', self.change_mode) # Permite conmutar entre modo real y virtual
+        self.app.add_url_rule('/get_active_info/<string:action>/<string:active>', 'get_active_info', self.get_active_info) # Obtiene los datos de las posiciones activas de un determinado activo
         self.app.add_url_rule('/get_wallet_info', 'get_wallet_info', self.get_wallet_info) # Obtiene los datos relativos a la cartera ofrecidos por eToro
         self.app.add_url_rule('/get_portfolio/', 'get_portfolio', self.get_portfolio, defaults={"active":None}) # Obtiene los datos de las posiciones activas de un determinado activo
         self.app.add_url_rule('/get_portfolio/<string:active>', 'get_portfolio', self.get_portfolio) # Obtiene los datos de las posiciones activas de un determinado activo
-        self.app.add_url_rule('/get_active_info/<string:action>/<string:active>', 'get_active_info', self.get_active_info) # Obtiene los datos de las posiciones activas de un determinado activo
-        self.app.add_url_rule('/change_mode/<string:mode>', 'change_mode', self.change_mode) # Permite conmutar entre modo real y virtual
         self.app.add_url_rule('/open_position/<string:action>/<string:active>/<string:leverage>/<string:amount>', 'open_position', self.open_position) # Permite abrir una posicion de un activo determinado
         self.app.add_url_rule('/close_position/<string:active>/<int:id>', 'close_position', self.close_position) # Permite cerrar una posicion de un activo determinado
         self.app.add_url_rule('/close_all/', 'close_all', self.close_all, defaults={"active":None}) # Permite cerrar todas las posiciones de un activo determinado
         self.app.add_url_rule('/close_all/<string:active>', 'close_all', self.close_all) # Permite cerrar todas las posiciones de un activo determinado
-        self.app.add_url_rule('/api_status','api_status', self.api_status) # Permite conocer el estado de la API
+
+    def api_status(self):
+        """
+        This method enables user to know wheter this API is running or not
+        """
+        response = BasicResponse("OK", M.API_STATUS_DESCRIPTION, M.API_STATUS_OK)
+        return response.json_response()
+
+    def change_mode(self, mode):
+        """
+        This method enables changing between "virtual" and "real" mode
+
+        :param mode: Mode you want to change. It can be "virtual" or "real"
+        :type mode: string
+
+        :return: Returns a json response which the status of the request and the information requested if succeed
+        :rtype: Response
+        """
+
+        try:
+            if mode == "real" or mode == "virtual":
+                self.driver.change_mode(mode)
+                response = BasicResponse("OK", M.CHANGE_MODE_DESCRIPTION, M.CHANGE_MODE_OK + mode)
+                return response.json_response()
+            else:
+                response = ErrorResponse("KO", M.CHANGE_MODE_DESCRIPTION, M.CHANGE_MODE_KO, M.CHANGE_MODE_INVALID_PARAM)
+                return response.json_error_response()
+        except ES.TimeoutException as err:
+            response = ErrorResponse("KO", M.CHANGE_MODE_DESCRIPTION, M.CHANGE_MODE_KO, str(err))
+            return response.json_error_response()
+
+    # Agregar excepciones
+    def get_active_info(self, action, active):
+        """
+        This method provides detailed info about and active for a buying or selling action
+
+        :param action: The action type. It can be "buy" or "sell"
+        :type action: string
+        :param active: Name used for an active in the eToro Web IDE.
+        :type active: string
+
+        :return: Returns a json response which the status of the request and the information requested if succeed
+        :rtype: Response
+        """
+        info = self.driver.get_active_info(action, active)
+        response = BasicResponse("OK", M.PORTFOLIO_DESCRIPTION, info)
+        return response.json_response()
 
     def get_wallet_info(self):
         """
@@ -77,46 +124,6 @@ class eToroWrapperServer():
             return response.json_response()
         except ES.TimeoutException as err:
             response = ErrorResponse("KO", M.PORTFOLIO_DESCRIPTION, M.PORTFOLIO_KO, str(err))
-            return response.json_error_response()
-
-    # Agregar excepciones
-    def get_active_info(self, action, active):
-        """
-        This method provides detailed info about and active for a buying or selling action
-
-        :param action: The action type. It can be "buy" or "sell"
-        :type action: string
-        :param active: Name used for an active in the eToro Web IDE.
-        :type active: string
-
-        :return: Returns a json response which the status of the request and the information requested if succeed
-        :rtype: Response
-        """
-        info = self.driver.get_active_info(action, active)
-        response = BasicResponse("OK", M.PORTFOLIO_DESCRIPTION, info)
-        return response.json_response()
-
-    def change_mode(self, mode):
-        """
-        This method enables changing between "virtual" and "real" mode
-
-        :param mode: Mode you want to change. It can be "virtual" or "real"
-        :type mode: string
-
-        :return: Returns a json response which the status of the request and the information requested if succeed
-        :rtype: Response
-        """
-
-        try:
-            if mode == "real" or mode == "virtual":
-                self.driver.change_mode(mode)
-                response = BasicResponse("OK", M.CHANGE_MODE_DESCRIPTION, M.CHANGE_MODE_OK + mode)
-                return response.json_response()
-            else:
-                response = ErrorResponse("KO", M.CHANGE_MODE_DESCRIPTION, M.CHANGE_MODE_KO, M.CHANGE_MODE_INVALID_PARAM)
-                return response.json_error_response()
-        except ES.TimeoutException as err:
-            response = ErrorResponse("KO", M.CHANGE_MODE_DESCRIPTION, M.CHANGE_MODE_KO, str(err))
             return response.json_error_response()
 
     def open_position(self, action, active, leverage, amount):
@@ -186,13 +193,6 @@ class eToroWrapperServer():
         except Exception as err:
             response = ErrorResponse("KO", M.CLOSE_POSITION_DESCRIPTION, M.CLOSE_POSITION_KO, str(err))
             return response.json_error_response()
-
-    def api_status(self):
-        """
-        This method enables user to know wheter this API is running or not
-        """
-
-        return "online"
 
 
 server = eToroWrapperServer()

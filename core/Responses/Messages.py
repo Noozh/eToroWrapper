@@ -1,4 +1,7 @@
 
+API_STATUS_DESCRIPTION = "The current status"
+API_STATUS_OK = "API is currently working properly"
+
 DRIVER_INIT_DESCRIPTION = "Driver init status"
 DRIVER_INIT_OK = "Driver was set up successfully"
 DRIVER_INIT_KO = "Something went wrong during setup"
