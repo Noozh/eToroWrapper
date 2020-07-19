@@ -1,0 +1,222 @@
+{
+	"info": {
+		"_postman_id": "6c8c0056-1d82-4fff-8916-752a82c1080d",
+		"name": "eToroAPI Trial",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "eToroAPI init",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{root_url}}/",
+					"host": [
+						"{{root_url}}"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get active portfolio",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{root_url}}/get_portfolio/btc",
+					"host": [
+						"{{root_url}}"
+					],
+					"path": [
+						"get_portfolio",
+						"btc"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change mode",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{root_url}}/change_mode/{{default_mode}}",
+					"host": [
+						"{{root_url}}"
+					],
+					"path": [
+						"change_mode",
+						"{{default_mode}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Open position",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{root_url}}/open_position/buy/btc/X1/75",
+					"host": [
+						"{{root_url}}"
+					],
+					"path": [
+						"open_position",
+						"buy",
+						"btc",
+						"X1",
+						"75"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get wallet info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{root_url}}/get_wallet_info",
+					"host": [
+						"{{root_url}}"
+					],
+					"path": [
+						"get_wallet_info"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Close active position",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{root_url}}/close_position/btc/1",
+					"host": [
+						"{{root_url}}"
+					],
+					"path": [
+						"close_position",
+						"btc",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get active info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{root_url}}/get_active_info/sell/btc",
+					"host": [
+						"{{root_url}}"
+					],
+					"path": [
+						"get_active_info",
+						"sell",
+						"btc"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Close all active position",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{root_url}}/close_all/ethereum",
+					"host": [
+						"{{root_url}}"
+					],
+					"path": [
+						"close_all",
+						"ethereum"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Close all position",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{root_url}}/close_all/",
+					"host": [
+						"{{root_url}}"
+					],
+					"path": [
+						"close_all",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Api status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{root_url}}/api_status",
+					"host": [
+						"{{root_url}}"
+					],
+					"path": [
+						"api_status"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "15147923-d562-438c-bf07-553ada8efe8c",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "9e0e251d-285f-4f43-83ba-3b69c6e31a2d",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "4ee2471e-9518-4a7a-a2f8-8834144fbc90",
+			"key": "root_url",
+			"value": "http://ec2-18-209-111-157.compute-1.amazonaws.com:5000",
+			"disabled": true
+		}
+	],
+	"protocolProfileBehavior": {}
+}
