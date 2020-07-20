@@ -36,7 +36,7 @@ class eToroWrapperServer():
         """
         This method maps API endpoints with each functional method
         """
-        self.app.add_url_rule('/api_status','api_status', self.api_status) # Permite conocer el estado de la API
+        self.app.add_url_rule('/service_status','service_status', self.service_status) # Permite conocer el estado de la API
         self.app.add_url_rule('/change_mode/<string:mode>', 'change_mode', self.change_mode) # Permite conmutar entre modo real y virtual
         self.app.add_url_rule('/get_active_info/<string:action>/<string:active>', 'get_active_info', self.get_active_info) # Obtiene los datos de las posiciones activas de un determinado activo
         self.app.add_url_rule('/get_wallet_info', 'get_wallet_info', self.get_wallet_info) # Obtiene los datos relativos a la cartera ofrecidos por eToro
@@ -47,11 +47,11 @@ class eToroWrapperServer():
         self.app.add_url_rule('/close_all/', 'close_all', self.close_all, defaults={"active":None}) # Permite cerrar todas las posiciones de un activo determinado
         self.app.add_url_rule('/close_all/<string:active>', 'close_all', self.close_all) # Permite cerrar todas las posiciones de un activo determinado
 
-    def api_status(self):
+    def service_status(self):
         """
-        This method enables user to know wheter this API is running or not
+        This method enables user to know wheter this service is running or not
         """
-        self.logger.info("Endpoint /api_status was called")
+        self.logger.info("Endpoint /service_status was called")
         response = BasicResponse("OK", M.API_STATUS_DESCRIPTION, M.API_STATUS_OK)
         return response.json_response()
 
