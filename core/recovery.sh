@@ -4,6 +4,7 @@ if [ $? -ne 0 ]
 then
     id=$(docker ps | awk -F '        ' '{print $1}'| tail -1)
     docker stop $id
+    docker rm $(docker ps -a -q)
     docker run -d -p 5000:5000 core
     exit
 fi
@@ -13,5 +14,6 @@ if [ $? -ne 0 ]
 then
     id=$(docker ps | awk -F '        ' '{print $1}'| tail -1)
     docker stop $id
+    docker rm $(docker ps -a -q)
     docker run -d -p 5000:5000 core
 fi
