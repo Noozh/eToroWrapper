@@ -8,6 +8,7 @@ from Exceptions.LeverageNotAvailable import LeverageNotAvailable
 import chromedriver_binary
 import time
 import logging
+import yaml
 
 class eToroCrawler():
 
@@ -40,8 +41,14 @@ class eToroCrawler():
         Logs in the eToro Web IDE
         """
         self.driver.get ("https://www.etoro.com/es/login")
-        WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.ID, "username"))).send_keys("Noozh1")
-        self.driver.find_element_by_id("password").send_keys("Burningcrusade1")
+        with open('config.yaml') as config:
+            accounts = yaml.load_all(config)
+            for account in accounts:
+                for id, data in account.items():
+                    username = data[0]['username']
+                    password = data[1]['password']
+        WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.ID, "username"))).send_keys(username)
+        self.driver.find_element_by_id("password").send_keys(password)
         self.driver.find_element_by_tag_name("button").click()
 
     def get_wallet_info(self):
@@ -68,7 +75,7 @@ class eToroCrawler():
         self.driver.get("https://www.etoro.com/portfolio/"+active)
         n_input = 0
         actives = []
-        WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.TAG_NAME, "ui-table-body")))
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "ui-table-body")))
         try:
             while True:
                 actives.append(self.driver.find_elements_by_class_name("ui-table-row-container")[n_input].text)
@@ -90,9 +97,8 @@ class eToroCrawler():
         """
         output = {}
         self.driver.get("https://www.etoro.com/markets/" + active)
-        time.sleep(2)
-        WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.CLASS_NAME, "blue-btn"))).click()
-        time.sleep(2)
+        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "blue-btn"))).click()
+        time.sleep(4)
         if action == "sell":
             self.driver.find_element_by_class_name("execution-head-button").click()
         output[action + "_price"] = self.driver.find_element_by_class_name("execution-main-head-price-value").text
@@ -118,9 +124,11 @@ class eToroCrawler():
 
         """
         if action == "sell":
-            self.driver.find_element_by_class_name("execution-head-button").click()
-        self.driver.find_element_by_class_name("center-tab").click()
-        input = WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME, "stepper-value")))
+            WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "execution-head-button"))).click()
+            #self.driver.find_element_by_class_name("execution-head-button").click()
+        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "center-tab"))).click()
+        #self.driver.find_element_by_class_name("center-tab").click()
+        input = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "stepper-value")))
         input.click()
         input.send_keys(Keys.CONTROL , 'a')
         input.send_keys(Keys.DELETE)
@@ -151,13 +159,10 @@ class eToroCrawler():
         :type amount: string
         """
         self.driver.get("https://www.etoro.com/markets/" + active)
-        time.sleep(2)
-        WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.CLASS_NAME, "blue-btn"))).click()
-        time.sleep(2)
+        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "blue-btn"))).click()
+        time.sleep(5)
         self.set_position_window(action, leverage, amount)
-        time.sleep(1)
-        time.sleep(1)
-        self.driver.find_element_by_class_name("execution-button").click()
+        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "execution-button"))).click()
 
     def close_position(self, active, id):
         """
@@ -170,9 +175,9 @@ class eToroCrawler():
 
         """
         self.driver.get("https://www.etoro.com/portfolio/" + active)
-        WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME, "stop")))
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "stop")))
         self.driver.find_elements_by_class_name("stop")[id].click()
-        WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.CLASS_NAME, "red"))).click()
+        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "red"))).click()
 
     def close_all_active(self, active):
         """
@@ -183,12 +188,12 @@ class eToroCrawler():
 
         """
         self.driver.get("https://www.etoro.com/portfolio/" + active)
-        WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME, "stop")))
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "stop")))
         positions = self.driver.find_elements_by_class_name("stop")
         for position in positions:
-            WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.CLASS_NAME, "stop")))
+            WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "stop")))
             position.click()
-            WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.CLASS_NAME, "red"))).click()
+            WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "red"))).click()
 
     # Realizar mas test
     def close_all(self):
@@ -200,7 +205,7 @@ class eToroCrawler():
 
         """
         self.driver.get("https://www.etoro.com/portfolio/")
-        WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME, "table-first-name")))
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "table-first-name")))
         actives = self.driver.find_elements_by_class_name("table-first-name")
         target = []
         for active in actives:
