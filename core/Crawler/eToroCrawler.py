@@ -98,11 +98,11 @@ class eToroCrawler():
         output = {}
         self.driver.get("https://www.etoro.com/markets/" + active)
         WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "blue-btn"))).click()
-        time.sleep(4)
         if action == "sell":
-            self.driver.find_element_by_class_name("execution-head-button").click()
-        output[action + "_price"] = self.driver.find_element_by_class_name("execution-main-head-price-value").text
-        self.driver.find_element_by_class_name("center-tab").click()
+            WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "execution-head-button"))).click()
+        output[action + "_price"] = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "execution-main-head-price-value"))).text
+        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "center-tab"))).click()
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "risk-itemlevel")))
         leverage = self.driver.find_elements_by_class_name("risk-itemlevel")
         output["available_leverages"] = []
         for option in leverage:

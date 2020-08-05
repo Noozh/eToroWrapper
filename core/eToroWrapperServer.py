@@ -23,14 +23,8 @@ class eToroWrapperServer():
         self.driver = eToroCrawler()
         self.logger.info("Crawler has been initialized succesfully")
         self.api_pid = os.getpid()
-        #self.webdriver_pid = self.driver.driver.service.process.pid
-        #print("API pid: " + str(self.api_pid) + " webdriver pid: " + str(self.webdriver_pid))
-        #subprocess.Popen(['python3', 'ServerWatcher.py' ,str(self.api_pid), str(self.webdriver_pid)])
         self.logger.info("Server is online")
         self.app.run(debug=True, host='0.0.0.0', use_reloader=False)
-        # command = 'python3 ServerWatcher.py ' + str(os.getpid())
-        # print(command)
-        # os.system(command)
 
     def setRoutes(self):
         """
@@ -44,7 +38,7 @@ class eToroWrapperServer():
         self.app.add_url_rule('/get_portfolio/<string:active>', 'get_portfolio', self.get_portfolio) # Obtiene los datos de las posiciones activas de un determinado activo
         self.app.add_url_rule('/open_position/<string:action>/<string:active>/<string:leverage>/<string:amount>', 'open_position', self.open_position) # Permite abrir una posicion de un activo determinado
         self.app.add_url_rule('/close_position/<string:active>/<int:id>', 'close_position', self.close_position) # Permite cerrar una posicion de un activo determinado
-        self.app.add_url_rule('/close_all/', 'close_all', self.close_all, defaults={"active":None}) # Permite cerrar todas las posiciones de un activo determinado
+        self.app.add_url_rule('/close_all', 'close_all', self.close_all, defaults={"active":None}) # Permite cerrar todas las posiciones de un activo determinado
         self.app.add_url_rule('/close_all/<string:active>', 'close_all', self.close_all) # Permite cerrar todas las posiciones de un activo determinado
 
     def service_status(self):
@@ -81,7 +75,6 @@ class eToroWrapperServer():
             response = ErrorResponse("KO", M.CHANGE_MODE_DESCRIPTION, M.CHANGE_MODE_KO, str(err))
             return response.json_error_response()
 
-    # Agregar excepciones
     def get_active_info(self, action, active):
         """
         This method provides detailed info about and active for a buying or selling action
@@ -94,10 +87,20 @@ class eToroWrapperServer():
         :return: Returns a json response which the status of the request and the information requested if succeed
         :rtype: Response
         """
-        self.logger.info("Endpoint /get_active_info/" + action + "/" + active + "was called")
-        info = self.driver.get_active_info(action, active)
-        response = BasicResponse("OK", M.PORTFOLIO_DESCRIPTION, info)
-        return response.json_response()
+        try:
+            self.logger.info("Endpoint /get_active_info/" + action + "/" + active + "was called")
+            info = self.driver.get_active_info(action, active)
+            response = BasicResponse("OK", M.ACTIVE_INFO_DESCRIPTION, info)
+            return response.json_response()
+        except ES.TimeoutException as err:
+            self.logger.warning("Active info couldn't be gathered: " + str(err) )
+            response = ErrorResponse("KO", M.ACTIVE_INFO_DESCRIPTION, M.ACTIVE_INFO_KO, str(err))
+            return response.json_error_response()
+        except Exception as err:
+            self.logger.warning("Active info couldn't be gathered: " + str(err))
+            response = ErrorResponse("KO", M.ACTIVE_INFO_DESCRIPTION, M.ACTIVE_INFO_KO, str(err))
+            return response.json_error_response()
+
 
     def get_wallet_info(self):
         """
@@ -127,7 +130,7 @@ class eToroWrapperServer():
         :return: Returns a json response which the status of the request and the information requested if succeed
         :rtype: Response
         """
-        self.logger.info("Endpoint /get_portfolio/" + active + " was called")
+        self.logger.info("Endpoint /get_portfolio/ was called")
         try:
 
             if active == None:
@@ -139,6 +142,10 @@ class eToroWrapperServer():
             response = BasicResponse("OK", M.PORTFOLIO_DESCRIPTION, portfolio)
             return response.json_response()
         except ES.TimeoutException as err:
+            self.logger.warning("Portfolio info couldn't be gathered: " + str(err))
+            response = ErrorResponse("KO", M.PORTFOLIO_DESCRIPTION, M.PORTFOLIO_KO, str(err))
+            return response.json_error_response()
+        except Exception as err:
             self.logger.warning("Portfolio info couldn't be gathered: " + str(err))
             response = ErrorResponse("KO", M.PORTFOLIO_DESCRIPTION, M.PORTFOLIO_KO, str(err))
             return response.json_error_response()
@@ -186,7 +193,7 @@ class eToroWrapperServer():
         :return: Returns a json response which the status of the request and the information requested if succeed
         :rtype: Response
         """
-        self.logger.info("Endpoint /close_position/" + active + "/" + id)
+        self.logger.info("Endpoint /close_position/" + active + "/" + str(id))
         try:
             self.driver.close_position(active, id)
             self.logger.info("Position was closed succesfully")
@@ -207,7 +214,7 @@ class eToroWrapperServer():
         :return: Returns a json response which the status of the request and the information requested if succeed
         :rtype: Response
         """
-        self.logger.info("Endpoint /close_all/" + active )
+        self.logger.info("Endpoint /close_all/ was called")
         try:
             if active == None:
                 self.driver.close_all()
