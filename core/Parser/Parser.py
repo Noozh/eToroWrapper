@@ -46,7 +46,7 @@ def parse_portfolio(portfolio):
     """
     output = []
     portfolio = str_clean(portfolio, ["[","]","'",'"'])
-    portfolio = portfolio.split(",")
+    portfolio = portfolio.split(", ")
     for input in portfolio:
         output_row = {}
         input = input.replace("\\n","\n").split("\n")
@@ -61,7 +61,6 @@ def parse_portfolio(portfolio):
         output.append(output_row)
     return output
 
-# Revisar
 def active_portfolio_format(portfolio):
     """
     Order provided active portfolio info and put them in a dict format
@@ -76,8 +75,8 @@ def active_portfolio_format(portfolio):
     i = 0
     try:
         while True:
-            output.append(portfolio[i]+portfolio[i+1])
-            i+=2
+            output.append(portfolio[i])
+            i+=1
     except IndexError:
         return output
 
@@ -93,15 +92,13 @@ def parse_active_portfolio(portfolio):
     """
     output = []
     portfolio = str_clean(portfolio, ["[","]","'",'"'])
-    portfolio = portfolio.split(",")
+    portfolio = portfolio.split(", ")
     portfolio = active_portfolio_format(portfolio)
     id = 0
     for input in portfolio:
         output_row = {}
         input = input.replace("\\n","\n").split("\n")
-        print(input)
         input[2] = input[2].split(" ")
-        print(input)
         output_row["id"] = id
         output_row["type"] = input[0]
         output_row["opening_date"] = input[1]
@@ -110,7 +107,7 @@ def parse_active_portfolio(portfolio):
         output_row["opening_value"] = input[2][2]
         output_row["current_value"] = input[2][3]
         output_row["G/P($)"] = input[2][6]
-        output_row["G/P(%)"] = input[2][7]
+        #output_row["G/P(%)"] = input[2][7]
         output.append(output_row)
         id += 1
     return output

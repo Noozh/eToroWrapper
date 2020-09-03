@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-eToro API's documentation
+eToroWrapper source code documentation
 =====================================
 .. toctree::
    :maxdepth: 2
@@ -39,12 +39,4 @@ Exceptions
    :undoc-members:
 
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 

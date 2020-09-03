@@ -7,6 +7,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from Exceptions.LeverageNotAvailable import LeverageNotAvailable
 import chromedriver_binary
 import time
+import logging
+import yaml
 
 class eToroCrawler():
 
@@ -15,15 +17,17 @@ class eToroCrawler():
         Constructor for the class eToroWrapperServer. It opens a browser tab and calls setup() method to log in the eToro Web IDE
         """
         chrome_options = webdriver.ChromeOptions();
-        chrome_options.add_experimental_option("excludeSwitches", ['enable-automation'])
-        chrome_options.add_experimental_option('useAutomationExtension', False)
-        chrome_options.add_argument("disable-infobars")
-        chrome_options.add_argument('--profile-directory=Default')
-        chrome_options.add_argument("--incognito")
-        chrome_options.add_argument('--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36')
-        chrome_options.add_argument('--disable-extensions')
-        chrome_options.add_argument("--disable-plugins-discovery");
-        chrome_options.add_argument("--start-maximized")
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("window-size=1400,1500")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("start-maximized")
+        chrome_options.add_argument("--disable-extensions")
+        chrome_options.add_argument("enable-automation")
+        chrome_options.add_argument("--disable-infobars")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument('user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36')
+
         script = '''
             Object.defineProperty(navigator, 'webdriver', {
                 get: () => undefined
@@ -31,7 +35,6 @@ class eToroCrawler():
             '''
         self.driver = webdriver.Chrome(options=chrome_options)
         self.driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": script})
-        self.pid = self.driver.service.process.pid
         self.mode = "real"
         self.setup()
 
@@ -40,8 +43,14 @@ class eToroCrawler():
         Logs in the eToro Web IDE
         """
         self.driver.get ("https://www.etoro.com/es/login")
-        WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.ID, "username"))).send_keys("Noozh1")
-        self.driver.find_element_by_id("password").send_keys("Burningcrusade1")
+        with open('config.yaml') as config:
+            accounts = yaml.load_all(config)
+            for account in accounts:
+                for id, data in account.items():
+                    username = data[0]['username']
+                    password = data[1]['password']
+        WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.ID, "username"))).send_keys(username)
+        self.driver.find_element_by_id("password").send_keys(password)
         self.driver.find_element_by_tag_name("button").click()
 
     def get_wallet_info(self):
@@ -68,7 +77,7 @@ class eToroCrawler():
         self.driver.get("https://www.etoro.com/portfolio/"+active)
         n_input = 0
         actives = []
-        WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.TAG_NAME, "ui-table-body")))
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "ui-table-body")))
         try:
             while True:
                 actives.append(self.driver.find_elements_by_class_name("ui-table-row-container")[n_input].text)
@@ -90,13 +99,12 @@ class eToroCrawler():
         """
         output = {}
         self.driver.get("https://www.etoro.com/markets/" + active)
-        time.sleep(2)
-        WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.CLASS_NAME, "blue-btn"))).click()
-        time.sleep(2)
+        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "blue-btn"))).click()
         if action == "sell":
-            self.driver.find_element_by_class_name("execution-head-button").click()
-        output[action + "_price"] = self.driver.find_element_by_class_name("execution-main-head-price-value").text
-        self.driver.find_element_by_class_name("center-tab").click()
+            WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "execution-head-button"))).click()
+        output[action + "_price"] = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "execution-main-head-price-value"))).text
+        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "center-tab"))).click()
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "risk-itemlevel")))
         leverage = self.driver.find_elements_by_class_name("risk-itemlevel")
         output["available_leverages"] = []
         for option in leverage:
@@ -118,9 +126,11 @@ class eToroCrawler():
 
         """
         if action == "sell":
-            self.driver.find_element_by_class_name("execution-head-button").click()
-        self.driver.find_element_by_class_name("center-tab").click()
-        input = WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME, "stepper-value")))
+            WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "execution-head-button"))).click()
+            #self.driver.find_element_by_class_name("execution-head-button").click()
+        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "center-tab"))).click()
+        #self.driver.find_element_by_class_name("center-tab").click()
+        input = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "stepper-value")))
         input.click()
         input.send_keys(Keys.CONTROL , 'a')
         input.send_keys(Keys.DELETE)
@@ -152,12 +162,11 @@ class eToroCrawler():
         """
         self.driver.get("https://www.etoro.com/markets/" + active)
         time.sleep(2)
-        WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.CLASS_NAME, "blue-btn"))).click()
-        time.sleep(2)
+        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "blue-btn"))).click()
         self.set_position_window(action, leverage, amount)
-        time.sleep(1)
-        time.sleep(1)
-        self.driver.find_element_by_class_name("execution-button").click()
+        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "execution-button"))).click()
+        self.driver.get("https://www.etoro.com/markets/")
+
 
     def close_position(self, active, id):
         """
@@ -170,9 +179,9 @@ class eToroCrawler():
 
         """
         self.driver.get("https://www.etoro.com/portfolio/" + active)
-        WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME, "stop")))
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "stop")))
         self.driver.find_elements_by_class_name("stop")[id].click()
-        WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.CLASS_NAME, "red"))).click()
+        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "red"))).click()
 
     def close_all_active(self, active):
         """
@@ -183,14 +192,13 @@ class eToroCrawler():
 
         """
         self.driver.get("https://www.etoro.com/portfolio/" + active)
-        WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME, "stop")))
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "stop")))
         positions = self.driver.find_elements_by_class_name("stop")
         for position in positions:
-            WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.CLASS_NAME, "stop")))
+            WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "stop")))
             position.click()
-            WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.CLASS_NAME, "red"))).click()
+            WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "red"))).click()
 
-    # Realizar mas test
     def close_all(self):
         """
         This method enables closing all existing positions
@@ -200,13 +208,12 @@ class eToroCrawler():
 
         """
         self.driver.get("https://www.etoro.com/portfolio/")
-        WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME, "table-first-name")))
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "table-first-name")))
         actives = self.driver.find_elements_by_class_name("table-first-name")
         target = []
         for active in actives:
             target.append(active.text)
         for active in target:
-            print(active)
             self.close_all_active(active)
 
     def change_mode(self, mode):
@@ -219,6 +226,7 @@ class eToroCrawler():
         """
         if self.mode == mode:
             return
+
         self.driver.get("https://www.etoro.com/watchlists")
         WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.TAG_NAME, "et-select"))).click()
         if mode == "virtual":
