@@ -34,7 +34,6 @@ def str_clean(str, charlist):
         str = str.replace(char, "")
     return str
 
-# Revisar caso de que solo haya 1 activo
 def parse_portfolio(portfolio):
     """
     Clean and format provided portfolio info and put them in a dict format
@@ -62,7 +61,6 @@ def parse_portfolio(portfolio):
         output.append(output_row)
     return output
 
-# Revisar
 def active_portfolio_format(portfolio):
     """
     Order provided active portfolio info and put them in a dict format
@@ -82,7 +80,6 @@ def active_portfolio_format(portfolio):
     except IndexError:
         return output
 
-# Revisar caso 1 sola posicion
 def parse_active_portfolio(portfolio):
     """
     Clean and format provided active portfolio info and put them in a dict format
