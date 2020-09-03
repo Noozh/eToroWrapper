@@ -214,7 +214,6 @@ class eToroCrawler():
         for active in actives:
             target.append(active.text)
         for active in target:
-            print(active)
             self.close_all_active(active)
 
     def change_mode(self, mode):
