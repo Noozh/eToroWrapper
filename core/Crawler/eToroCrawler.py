@@ -22,9 +22,11 @@ class eToroCrawler():
         chrome_options.add_argument("window-size=1400,1500")
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("start-maximized")
+        chrome_options.add_argument("--disable-extensions")
         chrome_options.add_argument("enable-automation")
         chrome_options.add_argument("--disable-infobars")
         chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument('user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36')
 
         script = '''
             Object.defineProperty(navigator, 'webdriver', {
@@ -159,10 +161,12 @@ class eToroCrawler():
         :type amount: string
         """
         self.driver.get("https://www.etoro.com/markets/" + active)
+        time.sleep(2)
         WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "blue-btn"))).click()
-        time.sleep(5)
         self.set_position_window(action, leverage, amount)
         WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "execution-button"))).click()
+        self.driver.get("https://www.etoro.com/markets/")
+
 
     def close_position(self, active, id):
         """
@@ -195,7 +199,6 @@ class eToroCrawler():
             position.click()
             WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "red"))).click()
 
-    # Realizar mas test
     def close_all(self):
         """
         This method enables closing all existing positions
@@ -224,6 +227,7 @@ class eToroCrawler():
         """
         if self.mode == mode:
             return
+
         self.driver.get("https://www.etoro.com/watchlists")
         WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.TAG_NAME, "et-select"))).click()
         if mode == "virtual":

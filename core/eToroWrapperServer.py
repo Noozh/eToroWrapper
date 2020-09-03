@@ -14,19 +14,18 @@ class eToroWrapperServer():
 
     def __init__(self):
         """
-        Constructor for the class eToroWrapperServer
+        Constructor for the eToroWrapperServer class
         """
         self.app = Flask(__name__)
         self.logger = L.create_log("logfile.log")
         self.logger.info("Logfile was created")
-        self.setRoutes()
+        self.set_routes()
         self.driver = eToroCrawler()
         self.logger.info("Crawler has been initialized succesfully")
-        self.api_pid = os.getpid()
         self.logger.info("Server is online")
         self.app.run(debug=True, host='0.0.0.0', use_reloader=False)
 
-    def setRoutes(self):
+    def set_routes(self):
         """
         This method maps API endpoints with each functional method
         """
